@@ -16,6 +16,10 @@ version = pluginVersion
 repositories {
     mavenCentral()
 
+	maven {
+		url = uri("https://plugins.gradle.org/m2/")
+	}
+
     maven {
         name = "MuonMC Releases"
         url = uri("https://maven.muonmc.org/releases")
@@ -32,6 +36,10 @@ dependencies {
 
 	api(libs.google.gson)
 	api(libs.fabric.tiny.remapper)
+	api("gradle.plugin.org.jetbrains.gradle.plugin.idea-ext:gradle-idea-ext:1.1.9")
+
+	runtimeOnly("ch.qos.logback:logback-classic:1.5.5")
+	runtimeOnly("org.apache.logging.log4j:log4j-to-slf4j:2.24.1")
 }
 
 gradlePlugin {

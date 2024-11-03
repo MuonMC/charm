@@ -20,15 +20,41 @@ package org.muonmc.charm.impl;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.UnknownDomainObjectException;
+import org.gradle.api.plugins.ExtensionAware;
+import org.gradle.plugins.ide.idea.model.IdeaModel;
+import org.gradle.plugins.ide.idea.model.IdeaProject;
+import org.jetbrains.gradle.ext.*;
 import org.jetbrains.annotations.NotNull;
 import org.muonmc.charm.task.minecraft.DownloadAssetsTask;
+import org.muonmc.charm.task.minecraft.DownloadManifestTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public class CharmPlugin implements Plugin<Project> {
+	private static final Logger LOGGER = LoggerFactory.getLogger("CharmPlugin");
+
 	@Override
 	public void apply(@NotNull Project target) {
+		// Run downloadAssets after the project is synched, before all other tasks.
+		DownloadManifestTask downloadManifest = target.getTasks()
+			.create("downloadManifest", DownloadManifestTask.class, ConfigureCharmTask.configure());
+		DownloadAssetsTask downloadAssets = target.getTasks()
+			.create("downloadAssets", DownloadAssetsTask.class, ConfigureCharmTask.configure());
+		// IntelliJ IDEA
+		try {
+			IdeaProject ideaProject = target.getExtensions().getByType(IdeaModel.class).getProject();
+			TaskTriggersConfig taskTriggers = ((ExtensionAware) ((ExtensionAware) ideaProject).getExtensions().getByType(ProjectSettings.class)).getExtensions().getByType(TaskTriggersConfig.class);
+			taskTriggers.afterSync("downloadAssets");
+			downloadAssets.setDependsOn(List.of(downloadManifest));
+		} catch (UnknownDomainObjectException e) {
+			LOGGER.warn("idea-ext plugin not found {}", e.getLocalizedMessage());
+		}
+
 		// Set up the custom Minecraft repository.
 		target.getRepositories().maven(repository -> {
 			repository.setName(Constants.MINECRAFT_MAVEN_NAME);
@@ -46,10 +72,5 @@ public class CharmPlugin implements Plugin<Project> {
 			}
 			repository.content(content -> content.includeModule(Constants.HASHED_GROUP, Constants.HASHED_ARTIFACT));
 		});
-
-		// Run downloadAssets after the project is evaluated.
-		// This must be run after the project is evaluated since that is when a list of dependencies is available.
-		DownloadAssetsTask downloadAssets = target.getTasks().create("downloadAssets", DownloadAssetsTask.class, ConfigureCharmTask.configure());
-		target.afterEvaluate(project -> downloadAssets.runTask());
 	}
 }
