@@ -31,6 +31,14 @@ repositories {
     }
 
 	maven {
+		name = "MuonMC Snapshots"
+		url = uri("https://maven.muonmc.org/snapshots")
+		content {
+			includeModule("net.fabricmc", "tiny-remapper")
+		}
+	}
+
+	maven {
 		name = "FabricMC"
 		url = uri("https://maven.fabricmc.net/")
 		content {
