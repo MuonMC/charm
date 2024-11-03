@@ -1,7 +1,11 @@
 [versions]
 gson = "2.11.0"
 tiny-remapper = "0.10.4"
+mapping-io = "0.6.1"
+stitch = "0.6.4"
 
 [libraries]
 google-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 fabric-tiny-remapper = { module = "net.fabricmc:tiny-remapper", version.ref = "tiny-remapper" }
+fabric-mapping-io = { module = "net.fabricmc:mapping-io", version.ref = "mapping-io" }
+fabric-stitch = { module = "net.fabricmc:stitch", version.ref = "stitch" }

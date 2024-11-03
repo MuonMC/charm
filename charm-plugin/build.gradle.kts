@@ -26,8 +26,17 @@ repositories {
 		content {
 			includeGroup("org.muonmc")
 			includeModule("net.fabricmc", "tiny-remapper")
+			includeModule("net.fabricmc", "stitch")
 		}
     }
+
+	maven {
+		name = "FabricMC"
+		url = uri("https://maven.fabricmc.net/")
+		content {
+			includeModule("net.fabricmc", "tiny-mappings-parser")
+		}
+	}
 }
 
 dependencies {
@@ -36,6 +45,8 @@ dependencies {
 
 	api(libs.google.gson)
 	api(libs.fabric.tiny.remapper)
+	api(libs.fabric.mapping.io)
+	api(libs.fabric.stitch)
 	api("gradle.plugin.org.jetbrains.gradle.plugin.idea-ext:gradle-idea-ext:1.1.9")
 
 	runtimeOnly("ch.qos.logback:logback-classic:1.5.5")

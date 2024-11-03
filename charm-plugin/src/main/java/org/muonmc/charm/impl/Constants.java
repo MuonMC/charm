@@ -33,5 +33,7 @@ public final class Constants {
 	public static final String HASHED_GROUP = "org.quiltmc";
 	public static final String HASHED_ARTIFACT = "hashed";
 
+	public static final String MINECRAFT_CONFIGURATION = "minecraft";
+
 	private Constants() {}
 }

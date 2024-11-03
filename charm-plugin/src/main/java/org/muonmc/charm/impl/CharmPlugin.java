@@ -55,6 +55,9 @@ public class CharmPlugin implements Plugin<Project> {
 			LOGGER.warn("idea-ext plugin not found {}", e.getLocalizedMessage());
 		}
 
+		target.getConfigurations().create(Constants.MINECRAFT_CONFIGURATION)
+			.extendsFrom(target.getConfigurations().getByName("implementation"));
+
 		// Set up the custom Minecraft repository.
 		target.getRepositories().maven(repository -> {
 			repository.setName(Constants.MINECRAFT_MAVEN_NAME);

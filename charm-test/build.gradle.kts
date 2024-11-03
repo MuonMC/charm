@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-	implementation("net.minecraft:minecraft:1.21")
+	minecraft("net.minecraft:minecraft:1.21")
 }
 
 tasks.test {

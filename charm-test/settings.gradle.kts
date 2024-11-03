@@ -12,6 +12,15 @@ pluginManagement {
 			url = uri("https://maven.muonmc.org/releases")
 			content {
 				includeModule("net.fabricmc", "tiny-remapper")
+				includeModule("net.fabricmc", "stitch")
+			}
+		}
+
+		maven {
+			name = "FabricMC"
+			url = uri("https://maven.fabricmc.net/")
+			content {
+				includeModule("net.fabricmc", "tiny-mappings-parser")
 			}
 		}
 	}
