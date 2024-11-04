@@ -34,6 +34,10 @@ public final class Constants {
 	public static final String HASHED_ARTIFACT = "hashed";
 
 	public static final String MINECRAFT_CONFIGURATION = "minecraft";
+	public static final String MAPPINGS_CONFIGURATION = "mappings";
+
+	public static final String CLIENT_ENVIRONMENT = "client";
+	public static final String SERVER_ENVIRONMENT = "server";
 
 	private Constants() {}
 }

@@ -73,12 +73,23 @@ public abstract class DownloadAssetsTask extends DefaultTask {
 
 			String mavenPath = charmCache.toPath() + "/" + CharmUtil.getMavenPath(targetVersion);
 
-			// Write the Minecraft JAR.
+			// Write the client Minecraft JAR.
 			URL clientUrl = URI.create(clientUrlPath).toURL();
 			try (InputStream is = clientUrl.openStream()) {
 				FileUtil.createDir(project.file(mavenPath));
-				File clientJar = FileUtil.create(project.file(mavenPath + "/" + getJarName(targetVersion)));
+				File clientJar = FileUtil.create(project.file(mavenPath + "/" + getClientJarName(targetVersion)));
 				Files.write(clientJar.toPath(), is.readAllBytes(), StandardOpenOption.WRITE);
+			}
+
+			JsonObject server = downloads.get("server").getAsJsonObject();
+			String serverUrlPath = server.get("url").getAsString();
+
+			// Write the server Minecraft JAR.
+			URL serverUrl = URI.create(serverUrlPath).toURL();
+			try (InputStream is = serverUrl.openStream()) {
+				FileUtil.createDir(project.file(mavenPath));
+				File serverJar = FileUtil.create(project.file(mavenPath + "/" + getServerJarName(targetVersion)));
+				Files.write(serverJar.toPath(), is.readAllBytes(), StandardOpenOption.WRITE);
 			}
 
 			// Write the Maven POM.
@@ -99,8 +110,20 @@ public abstract class DownloadAssetsTask extends DefaultTask {
 		}
 	}
 
-	private static String getJarName(String targetVersion) {
-		return Constants.MINECRAFT_ARTIFACT + "-" + targetVersion + ".jar";
+	private static String getJarName(String targetVersion, String environment) {
+		return Constants.MINECRAFT_ARTIFACT + "-" + targetVersion + "-" + environment + ".jar";
+	}
+
+	private static String getClientJarName(String targetVersion) {
+		return getJarName(targetVersion, Constants.CLIENT_ENVIRONMENT);
+	}
+
+	private static String getServerJarName(String targetVersion) {
+		return getJarName(targetVersion, Constants.SERVER_ENVIRONMENT);
+	}
+
+	public static String getFinalJarName(String targetVersion) {
+		return getJarName(targetVersion, "");
 	}
 
 	private static String getPomName(String targetVersion) {
